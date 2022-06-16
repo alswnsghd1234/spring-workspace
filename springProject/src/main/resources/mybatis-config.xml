@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="com.kh.spring.board.model.vo.Board" alias="board"/>
+		<typeAlias type="com.kh.spring.board.model.vo.Reply" alias="reply"/>
+		<typeAlias type="com.kh.spring.member.model.vo.Member" alias="member"/>
+	</typeAliases>
+	
+	<!-- 
+		environment,dataSource에 기술했던 DB연결정보는 root-context.xml 에 작성한다.
+		-> DB 등록은 서버연동과 동시에 이루어져야하기 때문에
+			서버 연결과 동시에 읽혀지는 root-context.xml에 기술하는 것.
+			
+	
+	 -->
+
+	<mappers>
+		<mapper resource="/mappers/member-mapper.xml"/>
+		<mapper resource="/mappers/board-mapper.xml"/>
+		
+	
+	
+	</mappers>
+</configuration>
