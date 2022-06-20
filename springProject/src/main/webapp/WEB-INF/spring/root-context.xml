@@ -37,7 +37,7 @@
 	<!--  2단계Mybatis Spring에서 제공하는 SQL 명령어실행을 위한 도구 등록 -->
 	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
 		<!-- mybatis 설정파일 위치를 지정한다. -->
-		<property name="configLocation" value="classpath:mybatis-config.xml"/> <!--  classpath : resources를 의미 -->
+		<property name="configLocation" value="classpath:mybatis-config.xml"/> 
 		<property name="dataSource" ref="dataSource"/>
 	
 	</bean>

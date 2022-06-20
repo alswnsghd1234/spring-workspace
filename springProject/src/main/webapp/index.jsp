@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<jsp:forward page="WEB-INF/views/main.jsp"></jsp:forward>
 	<h2>하이이이</h2>
 </body>
 </html>
