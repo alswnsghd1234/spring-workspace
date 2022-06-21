@@ -7,11 +7,9 @@ import org.springframework.stereotype.Service;
 import com.kh.spring.member.model.dao.MemberDao;
 import com.kh.spring.member.model.vo.Member;
 
-//@Component
 @Service
 public class MemberServiceImpl implements MemberService{
 
-	//private MemberDao memberDao = new MemberDao();
 	
 	@Autowired
 	private MemberDao memberDao;

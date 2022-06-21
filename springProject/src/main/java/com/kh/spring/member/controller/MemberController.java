@@ -295,7 +295,7 @@ public class MemberController {
 		}
 		else {
 			model.addAttribute("errorMsg","회원탈퇴실패");
-			return "member/myPage";
+			return "common/errorPage";
 		}
 		}else{
 			return "redirect:";
