@@ -30,7 +30,7 @@ public interface BoardService {
 	int deleteBoard(int boardNo);
 	
 	//게시글 수정
-	int updateBoard(int boardNo);
+	int updateBoard(Board b);
 	
 	//댓글 리스트 조회
 	ArrayList<Reply> selectReplyList(int boardNo);

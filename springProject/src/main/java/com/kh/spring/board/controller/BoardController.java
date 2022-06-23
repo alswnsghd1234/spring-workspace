@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.board.model.service.BoardService;
 import com.kh.spring.board.model.vo.Board;
@@ -43,7 +44,6 @@ public class BoardController {
 		
 		model.addAttribute("list",list);
 		model.addAttribute("pi",pi);
-		System.out.println(list);
 		
 		return "board/boardListView";
 	}
@@ -125,65 +125,134 @@ public class BoardController {
 			
 		
 	}
-	//현재 넘어온 첨부파일 자체를 서버 폴더에 저장시키는 역할
-	public String saveFile(						
-						MultipartFile upfile
-						,HttpSession session
-						) {
+	
 
-	//1.원본파일명 뽑기
-	
-	String originName = upfile.getOriginalFilename(); // "dog.jpg"
-	
-	//2.시간 형식을 문자열로 뽑아오기
-	//년월일시분초
-	String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-	
-	//3.뒤에 붙을 5자리 랜덤값 뽑기
-	int ranNum = (int)(Math.random() *90000 +10000); // 5자리 랜덤값
-	
-	//4.원본 파일명으로부터 확장자명 뽑기
-	//.jpg
-	String ext = originName.substring(originName.lastIndexOf("."));
-	
-	//5.다 이어붙이기
-	String changeName = currentTime + ranNum+ext;
-	System.out.println(originName);
-	System.out.println(changeName);
-	
-	//6.업로드 하고자하는 물리적인 위치 알아내기(경로)
-	String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
-	
-	System.out.println(savePath);
-	
-	//7. 경로와 수정파일명을 합쳐서 업로드하기
-	try {
-		upfile.transferTo(new File(savePath+changeName));
-	} catch (IllegalStateException | IOException e) {
-		e.printStackTrace();
-	}
-	return changeName;
-}
 	@RequestMapping("detail.bo")
-	public String boardDetailView(Board b
-			,MultipartFile upfile
-			,HttpSession session
-			,Model model) {
+	public ModelAndView boardDetailView(int bno								
+								,ModelAndView mv) {
 		
+		int result = boardService.increaseCount(bno);
 		
+		if(result >0) {//성공적으로 조회수가 증가되었다면
+			//상세보기할 정보를 select로 조회해오기
+			
+			//상세보기 할 정보를 select로 조회 해오기
+			Board b = boardService.selectBoard(bno);
+			//메소드 체이닝
+			mv.addObject("b",b).setViewName("board/boardDetailView");
+			
+		}else {
+			mv.addObject("errorMsg", "게시글 조회 실패").setViewName("common/errorPage");
+			
+		}
+		return mv;
 		
-		
-		return "board/boardDetailView";
 	}
+	
+	@RequestMapping("updateForm.bo")
+	public ModelAndView boardUpdateForm(int bno,MultipartFile upfile,ModelAndView mv) {
+		
+		Board b = boardService.selectBoard(bno);
+		
+		mv.addObject("b",b).setViewName("board/boardUpdate");
+		
+		return mv;
+	}
+		
+	
 	
 	@RequestMapping("update.bo")
-	public String boardUpdate() {
+	public ModelAndView boardUpdate(Board b,ModelAndView mv,MultipartFile upfile,HttpSession session) {
 		
-		return "board/boardDetailView";
+		//새로운 파일이 있는경우
+		if(!upfile.getOriginalFilename().equals("")) {
+			
+			//기본 첨부파일이 있을경우 - 삭제
+			if(!b.getOriginName().equals("")) {
+				new File(session.getServletContext().getRealPath(b.getChangeName())).delete();
+			}
+			
+			//2.새로 넘어온 파일 정보 등록
+			String changeName = saveFile(upfile,session);
+			
+			b.setOriginName(upfile.getOriginalFilename());
+			b.setChangeName("resources/uploadsFiles/"+changeName);
+		}
+		
+		int result = boardService.updateBoard(b);
+		
+		if(result>0) {
+			
+			session.setAttribute("alertMsg","게시글 수정 성공");
+			mv.setViewName("redirect:detail.bo?bno="+b.getBoardNo());
+			
+		}else {
+			mv.addObject("errorMsg", "게시글 수정 실패").setViewName("common/errorPage");
+		}
+		
+		
+		return mv;
 	}
 	@RequestMapping("delete.bo")
-	public String boardDelete() {
+	public ModelAndView boardDelete(ModelAndView mv,int bno,String filePath, HttpSession session ) {
 		
-		return "board/boardDetailView";
+		
+		int result = boardService.deleteBoard(bno);		
+		System.out.println(result);
+		
+		//첨부파일이 있었을 경우 - 파일 삭제(new File(실제경로).delete())
+		if(result>0) {
+			
+			if(!filePath.equals("")) {
+				String realPath = session.getServletContext().getRealPath(filePath);
+				new File(realPath).delete();
+			}
+			session.setAttribute("alert", "게시글 삭제 성공");
+			mv.setViewName("redirect:list.bo");
+			
+		}else {
+			mv.addObject("errorMsg", "게시글 조회 실패").setViewName("common/errorPage");
+		}
+		
+		return mv;
 	}
+	//현재 넘어온 첨부파일 자체를 서버 폴더에 저장시키는 역할
+		public String saveFile(						
+							MultipartFile upfile
+							,HttpSession session
+							) {
+
+		//1.원본파일명 뽑기
+		
+		String originName = upfile.getOriginalFilename(); // "dog.jpg"
+		
+		//2.시간 형식을 문자열로 뽑아오기
+		//년월일시분초
+		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+		
+		//3.뒤에 붙을 5자리 랜덤값 뽑기
+		int ranNum = (int)(Math.random() *90000 +10000); // 5자리 랜덤값
+		
+		//4.원본 파일명으로부터 확장자명 뽑기
+		//.jpg
+		String ext = originName.substring(originName.lastIndexOf("."));
+		
+		//5.다 이어붙이기
+		String changeName = currentTime + ranNum+ext;
+		System.out.println(originName);
+		System.out.println(changeName);
+		
+		//6.업로드 하고자하는 물리적인 위치 알아내기(경로)
+		String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
+		
+		System.out.println(savePath);
+		
+		//7. 경로와 수정파일명을 합쳐서 업로드하기
+		try {
+			upfile.transferTo(new File(savePath+changeName));
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+		}
+		return changeName;
+}
 }
