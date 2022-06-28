@@ -1,0 +1,38 @@
+1. https://github.com/spring-projects/toolsuite-distribution/wiki/Spring-Tool-Suite-3 접속 -> Spring Tool Suite 3.9.13의 full distribution on Eclipse 4.16에서 운영체제에 맞는 파일 다운로드
+2. maven.apache.org 접속 -> Download탭 -> Files -> apache-maven.3.8.6-bin.zip 다운로드, 압축 해제 후 dev 폴더에 저장
+3. apache-maven.3.8.6 폴더 안에 repository 폴더 생성
+4. apache-maven.3.8.6 -> conf -> settings 파일 메모장으로 열기
+5. repository 경로 복사 후 settings 파일에서 localRepository의 <localRepository>/path/to/local/repo</localRepository> 문장을 복사하여 주석 바깥으로 꺼내서 붙여넣은 후, 태그 안에 위에서 복사한 repository 경로 지정
+6. STS3 설치 사이트로 이동하고 Spring Tool Suite 3.9.13에서 각각의 os에 알맞는 파일 다운로드
+7. C 드라이브로 파일 이동 후 파일명을 s로 변경, 압축 풀기
+8. SQlDeveloper에서 Spring 계정 생성 후 테이블 스크립트 입력
+9. STS 실행 후 생성했던 workspace 폴더 지정 후 Launch
+10. Windows- preferences -> UTF-8로 encoding 설정
+11. Server -> RuntimeEnvironments에서 기존에 설정되어 있는 파일 삭제 후 apache-Tomcat 설정
+12. Java -> Code Style -> Code Template에서 code -> Method Body, Contruct Body, Catch block Body 클릭 후 edit -> 주석 처리된 행 삭제 후 저장
+13. preferences -> maven ->User Settings -> User Setting에서 Browse 클릭 후 apache-maven.3.8.6 -> conf -> settings 파일 경로 설정 지정 후 Apply
+14. Perspective -> Customize Perspective 클릭 후  General -> Folder, Java -> Class, Interface, Package, Spring -> Spring Bean Configugartion, Spring Legacy Project, Web -> JSP FIles, XML -> XML Files 설정 후 Apply and Close
+15. 우클릭 -> New -> Spring Legacy Project -> project name 입력 후 Spring MVC Project 클릭 -> Next 클릭 -> com.kh.spring 입력 후 Finish
+16. 프로젝트 우클릭 -> properties -> Project Facets 클릭 -> java Version 1.8로 수정
+17. pom.xml 들어가서 java-version 1.8로 수정
+18. pom.xml 들어가서 org.springframework-version을 최신 버전(5.3.20)으로 수정
+19. Webapp 우클릭 -> New -> Jsp File -> index.jsp 파일 생성
+20. mvnrepository.com 접속 -> ojbc6 검색 후 클릭 -> 11.2.0.3 버전 클릭 -> maven 탭의 태그 클릭 -> pom.xml 들어가서 /dependencies 태그 위에 복사 붙여넣기
+21. /properties와 dependencies 태그 사이에 respositories, repository, id, url 태그 입력
+22. id 태그에 Datanucleus, url 태그에 http://www.datanucleus.org/downloads/maven2/ 입력
+23. mvnrepository.com 접속 -> spring-jdbc 검색 후 클릭 -> 5.3.20 버전 클릭 -> maven 탭의 태그 클릭 -> pom.xml 들어가서 /dependencies 태그 위에 붙여넣기
+24. mvnrepository.com 접속 -> mybatis 검색 후 클릭 -> 3.5.10 버전 클릭 -> maven 탭의 태그 클릭 -> pom.xml 들어가서 /dependencies 태그 위에 붙여넣기
+25. mvnrepository.com 접속 -> mybatis-spring 검색 후 클릭 -> 2.0.7 버전 클릭 -> maven 탭의 태그 클릭 -> pom.xml 들어가서 /dependencies 태그 위에 붙여넣기
+26. mvnrepository.com 접속 -> commons DBCP 검색 후 클릭 -> 1.4 버전 클릭 -> maven 탭의 태그 클릭 -> pom.xml 들어가서 /dependencies 태그 위에 붙여넣기
+27. preferences -> XML -> XML Catalog -> User Specified Entries 클릭 -> Add -> Location에 http://mybatis.org/dtd/mybatis-3-config.dtd, Key에 -//mybatis.org//DTD Config 3.0//EN 입력
+28. preferences -> XML -> XML Catalog -> User Specified Entries 클릭 -> Add -> Location에 http://mybatis.org/dtd/mybatis-3-mapper.dtd, Key에 -//mybatis.org//DTD Mapper 3.0//EN 입력
+29. mapper 우클릭 -> XML File 클릭 -> 이름 지정 후 Next -> DTD file 클릭 후 Next -> Catalog entry 클릭 -> 해당 key 클릭 후 Next
+30. WEB-INF -> spring -> root-context.xml에서 주로 DB연결, 트랜잭션처리, SqlSession을 위한 beans 등록(1~3단계)
+31. mvnrepository.com 접속 -> lombok 검색 후 클릭 -> 1.18.12 버전 클릭 -> maven 탭의 태그 클릭 -> pom.xml 들어가서 /dependencies 태그 위에 붙여넣기
+32. 명령프롬프트에 cd C:\dev\apache-maven-3.8.6\repository\org\projectlombok\lombok\1.18.12 입력  -> java -jar lombok-1.18.12.jar 입력 -> STS 올바른 경로 수정 -> install
+33. mvnrepository.com 접속 -> security 검색 후 Core, Web, Config클릭 -> 5.7.1 버전 클릭 -> maven 탭의 태그 클릭 -> pom.xml 들어가서 /dependencies 태그 위에 붙여넣기
+34. spring 우클릭 -> new -> Spring Bean Definition file 클릭 -> File Name 입력 후 Next -> beans, security 체크 후 Finish
+35. spring-security.xml 파일에 <bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" id="bcryptPasswordEndocer"></bean> 입력
+36. web.xml 파일의 param-value에 /WEB-INF/spring/spring-security.xml 입력
+37. mvnrepository.com 접속 -> commons-fileupload 검색 후 클릭 -> 1.3.3 버전 클릭 -> maven 탭의 태그 클릭 -> pom.xml 들어가서 /dependencies 태그 위에 붙여넣기
+38. mvnrepository.com 접속 -> Apache Commons IO 검색 후 클릭 -> 2.11.0 버전 클릭 -> maven 탭의 태그 클릭 -> pom.xml 들어가서 /dependencies 태그 위에 붙여넣기

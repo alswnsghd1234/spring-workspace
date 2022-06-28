@@ -1,0 +1,7 @@
+서술형
+mybatis, framework, 동적sql 정의
+framework 장단점
+config설정, mappper, 별칭 태그
+
+평가자 체크리스트
+Ajax를 통한 댓글 조회
